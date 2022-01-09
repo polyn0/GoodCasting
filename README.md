@@ -55,11 +55,6 @@ input_text= "This person is a middle-aged woman. She has light brown short hair.
 
 The results will be stored under the folder `generations` with the name of the prompt that you have entered.
 
-
-
-## Comprehensive Reference
-
-
 ## Acknowledgments
 
 * [T5](https://arxiv.org/abs/1910.10683)
