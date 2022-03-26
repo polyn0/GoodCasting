@@ -7,6 +7,7 @@ import clip
 import numpy as np
 from PIL import Image
 
+from transformers import pipeline
 from stylegan_models import g_all, g_synthesis, g_mapping
 from utils import GetFeatureMaps, transform_img, compute_loss
 
@@ -54,10 +55,20 @@ args = parser.parse_args()
 
 output_path = args.output_path
 batch_size = args.batch_size
-prompt = args.prompt
+# prompt = args.prompt
+# prompt = summarization(args.prompt)
 lr = args.lr
 img_save_freq = args.img_save_freq
 ref_img_path = args.ref_img_path
+
+def summarization(text):
+    summarizer = pipeline("summarization", model="t5-base", tokenizer="t5-base", framework="pt")
+    result = summarizer(text, min_length=50, max_length=100)
+    prompt = result[0]['summary_text']
+    print("<summarization> \n", prompt)
+    return prompt
+
+prompt = summarization(args.prompt)
 
 output_dir = os.path.join(output_path, f'{prompt}')
 
@@ -163,8 +174,8 @@ while True:
     
     # NOTE: clip normalization did not seem to have much effect
     # img = clip_normalize(img)
-
-    loss = compute_clip_loss(img, args.prompt)
+    # print(prompt)
+    loss = compute_clip_loss(img, prompt)
 
     # NOTE: uncomment to use perceptual loos. Still WIP. You will need to define
     # the `ref_img_path` to use it. The image referenced will be the one 
